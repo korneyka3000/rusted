@@ -1,57 +1,47 @@
-use rand::Rng;
-use std::collections::HashMap;
-
+use std::io;
+const VOWEL_LETTER: &str = "aeiou";
 fn main() {
-    let mut int_vector = vec!();
-    let random_range = rand::thread_rng().gen_range(10..50);
-    for _ in 0..random_range {
-        let random_number: i32 = rand::thread_rng().gen_range(1..=25);
-        int_vector.push(random_number);
-    }
-    println!("{random_range}");
 
-    println!("Before sorting: {:#?}", int_vector);
+    let mut sentence = String::new();
 
-    int_vector.sort();
+    println!("Enter words, split by space:");
+    io::stdin()
+        .read_line(& mut sentence)
+        .expect("Failed to read");
 
-    println!("After sorting: {:#?}", int_vector);
+    println!("{sentence}");
 
-    let result = get_median(&int_vector);
-    println!("[x] The median is: {}, with vector length: {}", result.0, result.1);
-
-    let mode = get_mode(&int_vector);
-
-    println!("The mode is: {:?}", mode);
+    let res = basic_str(&sentence);
+    println!("{:#?}", res);
+    let res1 = with_format_str(sentence);
+    println!("{:#?}", res1);
 }
 
 
-fn get_median(int_vector: &Vec<i32>) -> (i32, usize) {
-    let len_vector = int_vector.len();
-    let median: i32 = match len_vector % 2 {
-        0 => {
-            println!("Even");
-            let middle1 = int_vector[len_vector / 2 - 1];
-            let middle2 = int_vector[len_vector / 2];
-            (middle1 + middle2) / 2
+fn basic_str(sentence_in: &String) -> String {
+    let mut result = String:: new();
+
+    for word in sentence_in.split_whitespace() {
+        if VOWEL_LETTER.contains(&word[0..1]) {
+            result += &*(word.to_string() + &"-hay ".to_string());
+        } else {
+            result += &*(word[1..].to_string() + &"-" + &*word[0..1].to_string() + &"ay ");
         }
-        1 => {
-            println!("Oven");
-            int_vector[(len_vector - 1) / 2]
-        }
-        _ => panic!(),
-    };
-    (median, len_vector)
+    }
+    result.trim().to_string()
 }
 
-
-fn get_mode(vector: &Vec<i32>) -> (&i32, i32) {
-    let mut scores = HashMap::new();
-    for value in vector {
-        let counter = scores.entry(value).or_insert(0);
-        *counter += 1;
+fn with_format_str(sentence_in: String) -> String {
+    let mut result = "".to_string();
+    let letter = "h";
+    for word in sentence_in.split_whitespace() {
+        if VOWEL_LETTER.contains(&word[0..1]){
+            result += &format!("{word}-{letter}ay ");
+        } else {
+            let first_symb = &word[0..1];
+            let start_word = word[1..].to_string();
+            result += &format!("{start_word}-{first_symb}ay ")
+        }
     }
-    println!("Counted occurrences: {:#?}", scores);
-    let mut sorted_scores = scores.into_iter().collect::<Vec<_>>();
-    sorted_scores.sort_by(|a, b| b.1.cmp(&a.1));
-    sorted_scores[0]
+    result.trim().to_string()
 }
