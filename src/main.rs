@@ -33,22 +33,22 @@ fn get_median(int_vector: &Vec<i32>) -> (i32, usize) {
             let middle1 = int_vector[len_vector / 2 - 1];
             let middle2 = int_vector[len_vector / 2];
             (middle1 + middle2) / 2
-        },
+        }
         1 => {
             println!("Oven");
-            int_vector[(len_vector -1) / 2]
-        },
+            int_vector[(len_vector - 1) / 2]
+        }
         _ => panic!(),
     };
     (median, len_vector)
 }
 
 
-fn get_mode (vector: &Vec<i32>) -> (&i32, i32) {
+fn get_mode(vector: &Vec<i32>) -> (&i32, i32) {
     let mut scores = HashMap::new();
     for value in vector {
         let counter = scores.entry(value).or_insert(0);
-        * counter += 1;
+        *counter += 1;
     }
     println!("Counted occurrences: {:#?}", scores);
     let mut sorted_scores = scores.into_iter().collect::<Vec<_>>();
